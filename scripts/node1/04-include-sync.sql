@@ -1,0 +1,1 @@
+\i /common/03-sync-functions.sql

@@ -1,0 +1,61 @@
+version: '3.8'
+services:
+  postgres-node1:
+    image: postgres:15-alpine
+    container_name: postgres-node1
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: universidad
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres-node1-data:/var/lib/postgresql/data
+      - ./scripts/common:/common
+      - ./scripts/node1:/docker-entrypoint-initdb.d/
+      - ./data:/csv-data:ro
+    networks:
+      - pg-distributed
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+
+  postgres-node2:
+    image: postgres:15-alpine
+    container_name: postgres-node2
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: universidad
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-node2-data:/var/lib/postgresql/data
+      - ./scripts/common:/common
+      - ./scripts/node2:/docker-entrypoint-initdb.d/
+      - ./data:/csv-data:ro
+    networks:
+      - pg-distributed
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 3      
+
+volumes:
+  postgres-node1-data:
+      driver: local
+  postgres-node2-data:
+      driver: local
+
+networks:
+  pg-distributed:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

@@ -19,21 +19,49 @@ BEGIN
         -- Crea el usuario si no existe
         EXECUTE format('DO $do$ BEGIN IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = %L) THEN CREATE USER %I WITH PASSWORD %L; END IF; END $do$', rec.id_p, rec.id_p, rec.id_p);
         -- Da permisos de consulta sobre la vista
-        EXECUTE format('GRANT SELECT ON profacIng TO %I;', rec.id_p);
+        EXECUTE format('GRANT SELECT ON profacMd TO %I;', rec.id_p);
     END LOOP;
 END $$;
 
 
-
 -- Crear rol para profesores y dar permisos
-create role rol_profacIng;
-grant select on profacIng  to rol_profacIng;
-grant update on profesores to rol_profacIng;
--- Crear usuario profesor y asignar rol
---create user "11002" with password '123456';
+create role rol_profacMd;
+grant select on profacMd to rol_profacMd;
+grant update on profesores to rol_profacMd;
 
-grant execute on function actualizar_datos_profesor(varchar, varchar, varchar, bigint) to rol_profacIng;
+-- Otorgar permisos de consulta sobre libros y autores al rol de profesores
+grant select on libros to rol_profacMd;
+grant select on autores to rol_profacMd;
+grant select on escribe to rol_profacMd;
 
+-- Otorgar permisos para que el profesor consulte su propia información personal y asignaturas asignadas
+grant select (id_p, nom_p, dir_p, profesion, tel_p) on profesores to rol_profacMd;
+grant select on imparte to rol_profacMd;
+
+
+grant execute on function actualizar_datos_profesor(varchar, varchar, varchar, bigint) to rol_profacMd;
+
+-- Crear rol para coordinador
+create role rol_coordinadormed;
+
+
+
+-- Asigna el profesor 10004 como coordinador en todas las carreras
+update carreras set id_coordinador = 10004;
+
+-- Crear usuario coordinador y asignar rol (si no existe)
+do $$
+begin
+    if not exists (select 1 from pg_roles where rolname = '10004') then
+        execute 'create user "10004" with password ''123456''';
+    end if;
+end
+$$;
+grant rol_coordinadormed to "10004";
+
+
+
+ 
 -- Crear rol para coordinador
 create role rol_coordinador;
 
@@ -41,12 +69,9 @@ create role rol_coordinador;
 
 -- Asegura que la tabla carreras tenga la columna id_coordinador y la FK a profesores
 alter table carreras add column if not exists id_coordinador int;
-alter table carreras
-    add constraint fk_carreras_coordinador
-    foreign key (id_coordinador) references profesores(id_p);
 
 -- Asigna el profesor 11001 como coordinador en todas las carreras (ajusta el WHERE si es necesario)
-update carreras set id_coordinador = 11001;
+update carreras set id_coordinador = 10001;
 
 -- Crear usuario coordinador y asignar rol (si no existe)
 do $$
@@ -134,6 +159,22 @@ grant select on inscribe to rol_coordinador;
 --grant execute on function actualizar_nota_coordinador(bigint, bigint, int, numeric, numeric, numeric) to rol_coordinador;
 --grant insert on log_actualizacion_notas to rol_coordinador;
 
+-- Permisos para el rol coordinador
+grant select, insert, update, delete on estudiantes to rol_coordinadormed;
+grant select, insert, update, delete on imparte to rol_coordinadormed;
+grant select, insert, update, delete on referencia to rol_coordinadormed;
+grant select, insert, update, delete on libros to rol_coordinadormed;
+grant select, insert, update, delete on autores to rol_coordinadormed;
+grant select, insert, update, delete on escribe to rol_coordinadormed;
+grant select on carreras to rol_coordinadormed;
+grant select on inscribe to rol_coordinadormed;
+grant select on vista_coordinador_estudiantes to rol_coordinadormed;
+grant select on vista_coordinador_notas to rol_coordinadormed;
+grant select on vista_coordinador_grupos to rol_coordinadormed;
+grant select on vista_coordinador_referencias to rol_coordinadormed;
+grant select on vista_coordinador_libros_autores to rol_coordinadormed;
+grant execute on function actualizar_nota_coordinador(bigint, bigint, int, numeric, numeric, numeric) to rol_coordinador;
+grant insert on log_actualizacion_notas to rol_coordinadormed;
 ----------------------------
 -- Crear rol para bibliotecario (transversal a todas las facultades)
 create role rol_bibliotecario;

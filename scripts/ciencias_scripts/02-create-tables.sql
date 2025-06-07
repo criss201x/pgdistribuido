@@ -12,138 +12,102 @@ CREATE EXTENSION IF NOT EXISTS dblink;
 CREATE EXTENSION IF NOT EXISTS dblink;
 
 
-CREATE TABLE carreras (
-	cod_carr int4 NOT NULL,
-	nom_carr character varying(50) DEFAULT ''::character varying NOT NULL
-);
-ALTER TABLE ONLY carreras ADD CONSTRAINT pk_cod_carr PRIMARY KEY (cod_carr );
+drop table if exists asignaturas;
+create table asignaturas(
+cod_a bigint constraint pk_cod_a primary key check (cod_a>0),
+nom_a varchar(256) not null,
+int_h int not null check (int_h between 1 and 3),
+creditos int not null check (creditos between 1 and 3),
+constraint uq_nom_a UNIQUE (nom_a));
 
+drop table if exists profesores;
+create table profesores(
+id_p int constraint pk_id_p primary key check (id_p>12000),
+nom_p varchar(75) not null,
+dir_p varchar (75) not null,
+Profesion varchar(75) not null,
+tel_p bigint not null check (tel_p>1000000000));
 
+ 
 
-CREATE TABLE estudiantes (
-    cod_e bigint NOT null ,
-    nom_e character varying(50) DEFAULT ''::character varying NOT NULL,
-    dir_e character varying(50) DEFAULT ''::character varying NOT NULL,
-    tel_e int4,
-    cod_carr int4,
-    f_nac date    
-);
-ALTER TABLE ONLY estudiantes ADD CONSTRAINT pk_estudiantes PRIMARY KEY (cod_e );
-ALTER TABLE estudiantes
-    ADD CONSTRAINT fk_cod_carr FOREIGN KEY (cod_carr ) REFERENCES carreras(cod_carr ) ON UPDATE RESTRICT ON DELETE RESTRICT;
+drop table if exists libros;
+create table libros(
+isbn bigint constraint pk_isbn primary key check (isbn>100000000),
+titulo varchar(76) not null,
+edicion int not null check (edicion>0),
+editorial varchar (76) not null,
+constraint uq_libro UNIQUE (titulo, edicion, editorial));
 
+drop table if exists autores;
+create table autores(
+id_a bigint constraint pk_id_a primary key check (id_a>1000),
+nom_a varchar(256) not null,
+nacionalidad varchar (20) not null,
+constraint uq_autor UNIQUE (nom_a, nacionalidad));
+ 
+drop table if exists carreras;
+create table carreras(
+id_carr bigint constraint pk_cod_carr primary key check (id_carr>900),
+nom_carr varchar(256) not null,
+reg_calif varchar (256) not null,
+constraint uq_nom_carr UNIQUE (nom_carr));
+  
+drop table if exists estudiantes;
+create table estudiantes(
+cod_e bigint constraint pk_cod_e primary key check (cod_e>20248500000),
+nom_e varchar(75) not null,
+dir_e varchar(60) not null,
+tel_e bigint null check (tel_e>1000000000),
+id_carr int not null check (id_carr>900),
+fech_nac date not null check (fech_nac between '1970-01-01' and '2009-12-31'),
+constraint fk_estudiantes_carreras FOREIGN KEY (id_carr) REFERENCES carreras(id_carr),
+constraint uq_estudiante UNIQUE (nom_e, fech_nac));
 
+drop table if exists ejemplares;
+create table ejemplares(
+num_ej int not null check (num_ej>0),
+isbn bigint not null check (isbn>100000000), 
+constraint pk_ejemplares primary key (num_ej, isbn),
+constraint fk_ejemplares_libros FOREIGN KEY (isbn) REFERENCES libros(isbn));
 
+drop table if exists escribe;
+create table escribe(
+isbn bigint constraint rf_libros references libros (isbn),
+id_a int  constraint rf_autores references autores (id_a),
+constraint pk_escribe primary key (isbn, id_a));
 
-CREATE TABLE asignaturas (
-    cod_a integer NOT NULL primary key,
-    nom_a character varying(50) DEFAULT ''::character varying NOT NULL,
-    ih integer NOT NULL,
-    cred integer NOT NULL
-);
+drop table if exists imparte;
+create table imparte(
+id_p int constraint rf_profesores references profesores (id_p) check (id_p>11000),
+cod_a bigint constraint rf_asignaturas references asignaturas (cod_a) check (cod_a>0),
+grupo int not null check (grupo between 1 and 5),
+horario varchar(76) not null,
+constraint pk_imparte primary key (id_p, cod_a, grupo));
+ 
+drop table if exists inscribe;
+create table inscribe(
+cod_e bigint constraint rf_estudiantes references estudiantes (cod_e) check (cod_e>20249500000),
+id_p int not null check (id_p>11000),
+cod_a bigint not null check (cod_a>0),
+grupo int not null check (grupo between 1 and 5),
+n1 numeric(2,1) null constraint uq_n1 check (n1 between 0 and 5),
+n2 numeric(2,1) null constraint uq_n2 check (n2 between 0 and 5),
+n3 numeric(2,1) null constraint uq_n3 check (n3 between 0 and 5),
+constraint pk_inscribe primary key (cod_e, id_p, cod_a, grupo),
+CONSTRAINT fk_inscribe_imparte FOREIGN KEY (id_p, cod_a, grupo) REFERENCES imparte (id_p, cod_a, grupo));
 
+drop table if exists presta;
+create table presta(
+cod_e bigint constraint rf_estudiantes references estudiantes (cod_e) check (cod_e>20248500000),
+isbn bigint not null check (isbn>100000000),
+num_ej int not null check (num_ej>0),
+fecha_p date not null,
+fecha_d date null,
+constraint pk_presta primary key (isbn, cod_e, num_ej, fecha_p ));
+ 
+drop table if exists referencia;
+create table referencia(
+cod_a bigint constraint rf_asignaturas references asignaturas (cod_a) check (cod_a>0),
+isbn bigint constraint rf_libros references libros (isbn) check (isbn>100000000),
+constraint pk_referencia primary key (isbn, cod_a));
 
-
-CREATE TABLE autores (
-    id_a integer NOT NULL primary key ,
-    nom_a character varying(50) DEFAULT ''::character varying NOT NULL
-);
-
-
-CREATE TABLE libros (
-    isbn bigint NOT NULL primary key ,
-    titulo character varying(50) DEFAULT ''::character varying NOT NULL,
-    edicion int4 NOT NULL
-);
-
-
-
-
-CREATE TABLE ejemplares (
-    num_ej int4 NOT NULL,
-    isbn bigint NOT NULL
-);
-ALTER TABLE ONLY ejemplares ADD CONSTRAINT pk_ejemplares PRIMARY KEY (num_ej, isbn);
-ALTER TABLE ONLY ejemplares 
-    ADD CONSTRAINT fk_isbn2 FOREIGN KEY (isbn) REFERENCES libros(isbn) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
-
-
-
-CREATE TABLE escribe (
-    isbn bigint NOT NULL,
-    id_a int4 NOT NULL
-);
-ALTER TABLE ONLY escribe ADD CONSTRAINT pk_escribe PRIMARY KEY (isbn, id_a);
-ALTER TABLE ONLY escribe
-    ADD CONSTRAINT fk_isbn FOREIGN KEY (isbn) REFERENCES libros(isbn) ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE ONLY escribe
-    ADD CONSTRAINT fk_id_a FOREIGN KEY (id_a) REFERENCES autores(id_a) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
-
-CREATE TABLE profesores (
-    id_p int NOT NULL primary key,
-    nom_p character varying(50) DEFAULT ''::character varying NOT NULL,
-    profesion character varying(50) DEFAULT ''::character varying NOT NULL,
-    tel_p int NOT NULL
-);
-
-
-CREATE TABLE imparte (
-    id_p int NOT NULL,
-    cod_a int NOT NULL,
-    grupo int NOT NULL,
-    horario character varying(50) DEFAULT ''::character varying NOT NULL
-);
-ALTER TABLE ONLY imparte ADD CONSTRAINT pk_imparte PRIMARY KEY (id_p, cod_a, grupo, horario);
-ALTER TABLE ONLY imparte
-    ADD CONSTRAINT fk_id_p FOREIGN KEY (id_p) REFERENCES profesores(id_p) ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE ONLY imparte
-    ADD CONSTRAINT fk_cod_a FOREIGN KEY (cod_a) REFERENCES asignaturas(cod_a) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
-CREATE TABLE inscribe (
-    cod_e int NOT NULL,
-    id_p int NOT NULL,
-    cod_a int NOT NULL,
-    grupo int NOT NULL,
-    n1 NUMERIC(3, 2) NOT NULL,
-    n2 NUMERIC(3, 2) NOT NULL,
-    n3 NUMERIC(3, 2) NOT NULL
-);
-ALTER TABLE ONLY inscribe ADD CONSTRAINT pk_inscribe PRIMARY KEY (cod_e, id_p, cod_a, grupo);
-ALTER TABLE ONLY inscribe
-    ADD CONSTRAINT fk_cod_e FOREIGN KEY (cod_e) REFERENCES estudiantes(cod_e) ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE ONLY inscribe
-    ADD CONSTRAINT fk_id_p FOREIGN KEY (id_p) REFERENCES profesores(id_p) ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE ONLY inscribe
-    ADD CONSTRAINT fk_cod_a FOREIGN KEY (cod_a) REFERENCES asignaturas(cod_a) ON UPDATE RESTRICT ON DELETE RESTRICT;
---ALTER TABLE ONLY inscribe
-    --ADD CONSTRAINT fk_grupo FOREIGN KEY (grupo) REFERENCES imparte(grupo) ON UPDATE RESTRICT ON DELETE RESTRICT; 
-
-
-CREATE TABLE presta (
-    cod_e int NOT NULL,
-    isbn bigint NOT NULL,
-    num_ej int NOT NULL,
-	fecha_p date NOT NULL,
-    fecha_d date
-);
-ALTER TABLE ONLY presta ADD CONSTRAINT pk_presta PRIMARY KEY (cod_e, isbn, num_ej, fecha_p);
-ALTER TABLE ONLY presta
-    ADD CONSTRAINT fk_isbn FOREIGN KEY (isbn, num_ej) REFERENCES ejemplares(isbn, num_ej) ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE ONLY presta
-    ADD CONSTRAINT fk_cod_e2 FOREIGN KEY (cod_e) REFERENCES estudiantes(cod_e) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
-CREATE TABLE referencia (
-	cod_a int NOT NULL,
-	isbn bigint NOT NULL
-);
-ALTER TABLE ONLY referencia ADD CONSTRAINT pk_referencia PRIMARY KEY (cod_a, isbn);
-ALTER TABLE ONLY referencia
-    ADD CONSTRAINT fk_cod_a_2 FOREIGN KEY (cod_a) REFERENCES asignaturas(cod_a) ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE ONLY referencia
-    ADD CONSTRAINT fk_isbn2 FOREIGN KEY (isbn) REFERENCES libros(isbn) ON UPDATE RESTRICT ON DELETE RESTRICT;

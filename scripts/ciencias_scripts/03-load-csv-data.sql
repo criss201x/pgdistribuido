@@ -1,29 +1,32 @@
 
 
 --COPY carreras FROM '/csv-data/carreras.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
-COPY carreras FROM '/csv-data/carreras.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
+COPY asignaturas from '/csv-data/Asignaturas_Ciencias.csv' CSV DELIMITER ';' header;
 
-COPY estudiantes FROM '/csv-data/estudiantes.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
+COPY profesores from '/csv-data/Profesores_Ciencias.csv' CSV DELIMITER ';' header;
 
-COPY asignaturas FROM '/csv-data/asignaturas.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
+COPY libros  from '/csv-data/libros_Ciencias.csv' CSV DELIMITER ';' header;
 
-COPY autores FROM '/csv-data/autores.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
+COPY autores from '/csv-data/autores_ciencias.csv' CSV DELIMITER ';' header;
 
-COPY libros FROM '/csv-data/libros.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
+COPY carreras from '/csv-data/Carreras_Ciencias.csv' CSV DELIMITER ';' header;
 
-COPY ejemplares FROM '/csv-data/ejemplares.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
+COPY estudiantes from '/csv-data/Estudiantes_Ciencias.csv' CSV DELIMITER ';' header;
 
-COPY escribe FROM '/csv-data/escribe.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
+COPY ejemplares from '/csv-data/ejemplares_Ciencias.csv' CSV DELIMITER ';' header;
 
-COPY profesores FROM '/csv-data/profesores.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
+COPY escribe from '/csv-data/escribe_ciencias.csv' CSV DELIMITER ';' header;
 
-COPY imparte FROM '/csv-data/imparte.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
+COPY imparte from '/csv-data/Imparte_Ciencias.csv' CSV DELIMITER ';' header;
 
-COPY inscribe FROM '/csv-data/inscribe.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
+COPY inscribe from '/csv-data/Inscribe_Ciencias.csv' CSV DELIMITER ';' header;
 
-COPY presta FROM '/csv-data/presta.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
+COPY presta from '/csv-data/presta_ciencias.csv' CSV DELIMITER ';' header;
 
-COPY referencia FROM '/csv-data/referencia.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
+COPY referencia from '/csv-data/referencia_ciencias.csv' CSV DELIMITER ';' header;
+
+
+
 
 
 

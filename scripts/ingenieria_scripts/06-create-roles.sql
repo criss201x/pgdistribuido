@@ -37,13 +37,20 @@ grant execute on function actualizar_datos_profesor(varchar, varchar, varchar, b
 -- Crear rol para coordinador
 create role rol_coordinador;
 
+-- Otorgar permisos de consulta sobre libros y autores al rol de profesores
+grant select on libros to rol_profacIng;
+grant select on autores to rol_profacIng;
+grant select on escribe to rol_profacIng;
 
+
+-- Otorgar permisos para que el profesor consulte su propia información personal y asignaturas asignadas
+grant select (id_p, nom_p, dir_p, profesion, tel_p) on profesores to rol_profacIng;
+grant select on imparte to rol_profacIng;
+grant update (n1, n2, n3) on inscribe to rol_profacIng;
 
 -- Asegura que la tabla carreras tenga la columna id_coordinador y la FK a profesores
 alter table carreras add column if not exists id_coordinador int;
-alter table carreras
-    add constraint fk_carreras_coordinador
-    foreign key (id_coordinador) references profesores(id_p);
+
 
 -- Asigna el profesor 11001 como coordinador en todas las carreras (ajusta el WHERE si es necesario)
 update carreras set id_coordinador = 11001;
@@ -74,6 +81,7 @@ create table if not exists log_actualizacion_notas (
     fecha_hora timestamp default current_timestamp
 );
 
+grant execute on function actualizar_datos_profesor(varchar, varchar, varchar, bigint) to rol_profacIng;
 -- Función para actualizar notas y registrar log
 create or replace function actualizar_nota_coordinador(
     p_cod_e bigint,
@@ -117,6 +125,22 @@ end;
 $$ language plpgsql;
 
 
+-- Crear usuario coordinador y asignar rol (si no existe)
+do $$
+begin
+    if not exists (select 1 from pg_roles where rolname = '11001') then
+        execute 'create user "11001" with password ''123456''';
+    end if;
+end
+$$;
+grant rol_coordinador to "11001"; 
+
+
+-- Crear rol para profesores y dar permisos
+create role rol_profacIng;
+grant select on profacIng  to rol_profacIng;
+grant update on profesores to rol_profacIng; 
+
 -- Permisos para el rol coordinador
 grant select, insert, update, delete on estudiantes to rol_coordinador;
 grant select, insert, update, delete on imparte to rol_coordinador;
@@ -135,6 +159,43 @@ grant select on inscribe to rol_coordinador;
 --grant insert on log_actualizacion_notas to rol_coordinador;
 
 ----------------------------
+-- Crear rol para bibliotecario (transversal a todas las facultades)
+create role rol_bibliotecario;
+
+-- Permisos para administración de préstamos de libros
+grant select, insert, update, delete on presta to rol_bibliotecario;
+
+-- Permisos para administración de ejemplares de libros
+grant select, insert, update, delete on ejemplares to rol_bibliotecario;
+
+-- Permisos para gestión de libros y autores
+grant select, insert, update, delete on libros to rol_bibliotecario;
+grant select, insert, update, delete on autores to rol_bibliotecario;
+grant select, insert, update, delete on escribe to rol_bibliotecario;
+create user "bibliotecario1" with password '123456';
+grant rol_bibliotecario to "bibliotecario1";
+
+
+
+-- Permisos para el rol coordinador
+grant select, insert, update, delete on estudiantes to rol_coordinador;
+grant select, insert, update, delete on imparte to rol_coordinador;
+grant select, insert, update, delete on referencia to rol_coordinador;
+grant select, insert, update, delete on libros to rol_coordinador;
+grant select, insert, update, delete on autores to rol_coordinador;
+grant select, insert, update, delete on escribe to rol_coordinador;
+grant select on carreras to rol_coordinador;
+grant select on inscribe to rol_coordinador;
+grant select on vista_coordinador_estudiantes to rol_coordinador;
+grant select on vista_coordinador_notas to rol_coordinador;
+grant select on vista_coordinador_grupos to rol_coordinador;
+grant select on vista_coordinador_referencias to rol_coordinador;
+grant select on vista_coordinador_libros_autores to rol_coordinador;
+grant execute on function actualizar_nota_coordinador(bigint, bigint, int, numeric, numeric, numeric) to rol_coordinador;
+grant insert on log_actualizacion_notas to rol_coordinador;
+
+
+-----------------------------
 -- Crear rol para bibliotecario (transversal a todas las facultades)
 create role rol_bibliotecario;
 

@@ -36,4 +36,4 @@ $BODY$
 LANGUAGE plpgsql;
 
 
---SELECT sync_all_from_node('postgres-node2');
+--SELECT sync_all_from_node('ingenieria');

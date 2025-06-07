@@ -1,28 +1,28 @@
 
 
-COPY ingenieria.carreras FROM '/csv-data/carreras.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
+COPY ingenieria.carreras FROM '/csv-data/carreras.csv' WITH (FORMAT csv, HEADER true, delimiter ';');
 
-COPY ingenieria.estudiantes FROM '/csv-data/estudiantes.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
+COPY ingenieria.estudiantes FROM '/csv-data/estudiantes.csv' WITH (FORMAT csv, HEADER true, delimiter ';');
 
-COPY ingenieria.asignaturas FROM '/csv-data/asignaturas.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
+COPY ingenieria.asignaturas FROM '/csv-data/asignaturas.csv' WITH (FORMAT csv, HEADER true, delimiter ';');
 
-COPY ingenieria.autores FROM '/csv-data/autores.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
+COPY ingenieria.autores FROM '/csv-data/autores_Med.csv' WITH (FORMAT csv, HEADER true, delimiter ';');
 
-COPY ingenieria.libros FROM '/csv-data/libros.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
+COPY ingenieria.libros FROM '/csv-data/libros_Med.csv' WITH (FORMAT csv, HEADER true, delimiter ';');
 
-COPY ingenieria.ejemplares FROM '/csv-data/ejemplares.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
+COPY ingenieria.ejemplares FROM '/csv-data/ejemplares_Med.csv' WITH (FORMAT csv, HEADER true, delimiter ';');
 
-COPY ingenieria.escribe FROM '/csv-data/escribe.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
+COPY ingenieria.escribe FROM '/csv-data/escribe_Med.csv' WITH (FORMAT csv, HEADER true, delimiter ';');
 
-COPY ingenieria.profesores FROM '/csv-data/profesores.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
+COPY ingenieria.profesores FROM '/csv-data/profesores.csv' WITH (FORMAT csv, HEADER true, delimiter ';');
 
-COPY ingenieria.imparte FROM '/csv-data/imparte.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
+COPY ingenieria.imparte FROM '/csv-data/imparte.csv' WITH (FORMAT csv, HEADER true, delimiter ';');
 
-COPY ingenieria.inscribe FROM '/csv-data/inscribe.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
+COPY ingenieria.inscribe FROM '/csv-data/inscribe.csv' WITH (FORMAT csv, HEADER true, delimiter ';');
 
-COPY ingenieria.presta FROM '/csv-data/presta.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
+COPY ingenieria.presta FROM '/csv-data/presta_Med.csv' WITH (FORMAT csv, HEADER true, delimiter ';');
 
-COPY ingenieria.referencia FROM '/csv-data/referencia.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
+COPY ingenieria.referencia FROM '/csv-data/referencia_Med.csv' WITH (FORMAT csv, HEADER true, delimiter ';');
 
 
 -- Verificar carga de usuarios

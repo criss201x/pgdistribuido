@@ -1,8 +1,8 @@
 version: '3.8'
 services:
-  postgres-node1:
+  ciencias:
     image: postgres:15-alpine
-    container_name: postgres-node1
+    container_name: ciencias
     restart: always
     environment:
       POSTGRES_PASSWORD: postgres
@@ -11,9 +11,9 @@ services:
     ports:
       - "5434:5432"
     volumes:
-      - postgres-node1-data:/var/lib/postgresql/data
+      - ciencias-data:/var/lib/postgresql/data
       - ./scripts/common:/common
-      - ./scripts/node1:/docker-entrypoint-initdb.d/
+      - ./scripts/ciencias_scripts:/docker-entrypoint-initdb.d/
       - ./data:/csv-data:ro
     networks:
       - pg-distributed
@@ -24,9 +24,9 @@ services:
       retries: 3
 
 
-  postgres-node2:
+  ingenieria:
     image: postgres:15-alpine
-    container_name: postgres-node2
+    container_name: ingenieria
     restart: always
     environment:
       POSTGRES_PASSWORD: postgres
@@ -35,9 +35,32 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - postgres-node2-data:/var/lib/postgresql/data
+      - ingenieria-data:/var/lib/postgresql/data
       - ./scripts/common:/common
-      - ./scripts/node2:/docker-entrypoint-initdb.d/
+      - ./scripts/ingenieria_scripts:/docker-entrypoint-initdb.d/
+      - ./data:/csv-data:ro
+    networks:
+      - pg-distributed
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  medioambiente:
+    image: postgres:15-alpine
+    container_name: medioambiente
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: universidad
+    ports:
+      - "5435:5432"
+    volumes:
+      - medioambiente-data:/var/lib/postgresql/data
+      - ./scripts/common:/common
+      - ./scripts/medioambiente_scripts:/docker-entrypoint-initdb.d/
       - ./data:/csv-data:ro
     networks:
       - pg-distributed
@@ -48,9 +71,11 @@ services:
       retries: 3      
 
 volumes:
-  postgres-node1-data:
+  ciencias-data:
       driver: local
-  postgres-node2-data:
+  ingenieria-data:
+      driver: local
+  medioambiente-data:
       driver: local
 
 networks:

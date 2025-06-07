@@ -14,9 +14,8 @@ CREATE EXTENSION IF NOT EXISTS dblink;
 
 CREATE TABLE carreras (
 	cod_carr int4 NOT NULL,
-	nom_carr character varying(50) DEFAULT ''::character varying NOT NULL,
-    reg_calif varchar (256) not null,
-    constraint uq_nom_carr UNIQUE (nom_carr));
+	nom_carr character varying(50) DEFAULT ''::character varying NOT NULL
+);
 ALTER TABLE ONLY carreras ADD CONSTRAINT pk_cod_carr PRIMARY KEY (cod_carr );
 
 

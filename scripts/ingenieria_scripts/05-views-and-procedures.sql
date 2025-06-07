@@ -21,3 +21,20 @@ create or replace view profacIng as
     where p.id_p::text = current_user -- Cambia a p.nom_p = current_user si usas nombres
     order by a.cod_a, e.cod_e;
 
+
+create or replace function actualizar_datos_profesor(
+    p_nom_p varchar,
+    p_dir_p varchar,
+    p_profesion varchar,
+    p_tel_p bigint
+) returns void as $$
+begin
+    update profesores
+    set nom_p = p_nom_p,
+        dir_p = p_dir_p,
+        profesion = p_profesion,
+        tel_p = p_tel_p
+    where id_p = current_user::int;
+end;
+$$ language plpgsql;
+

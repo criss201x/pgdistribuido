@@ -1,28 +1,33 @@
 
 
-COPY ingenieria.carreras FROM '/csv-data/carreras.csv' WITH (FORMAT csv, HEADER true, delimiter ';');
+--COPY carreras FROM '/csv-data/carreras.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
+COPY carreras FROM '/csv-data/carreras.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
 
-COPY ingenieria.estudiantes FROM '/csv-data/estudiantes.csv' WITH (FORMAT csv, HEADER true, delimiter ';');
+COPY estudiantes FROM '/csv-data/estudiantes.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
 
-COPY ingenieria.asignaturas FROM '/csv-data/asignaturas.csv' WITH (FORMAT csv, HEADER true, delimiter ';');
+COPY asignaturas FROM '/csv-data/asignaturas.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
 
-COPY ingenieria.autores FROM '/csv-data/autores_Med.csv' WITH (FORMAT csv, HEADER true, delimiter ';');
+COPY autores FROM '/csv-data/autores.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
 
-COPY ingenieria.libros FROM '/csv-data/libros_Med.csv' WITH (FORMAT csv, HEADER true, delimiter ';');
+COPY libros FROM '/csv-data/libros.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
 
-COPY ingenieria.ejemplares FROM '/csv-data/ejemplares_Med.csv' WITH (FORMAT csv, HEADER true, delimiter ';');
+COPY ejemplares FROM '/csv-data/ejemplares.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
 
-COPY ingenieria.escribe FROM '/csv-data/escribe_Med.csv' WITH (FORMAT csv, HEADER true, delimiter ';');
+COPY escribe FROM '/csv-data/escribe.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
 
-COPY ingenieria.profesores FROM '/csv-data/profesores.csv' WITH (FORMAT csv, HEADER true, delimiter ';');
+COPY profesores FROM '/csv-data/profesores.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
 
-COPY ingenieria.imparte FROM '/csv-data/imparte.csv' WITH (FORMAT csv, HEADER true, delimiter ';');
+COPY imparte FROM '/csv-data/imparte.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
 
-COPY ingenieria.inscribe FROM '/csv-data/inscribe.csv' WITH (FORMAT csv, HEADER true, delimiter ';');
+COPY inscribe FROM '/csv-data/inscribe.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
 
-COPY ingenieria.presta FROM '/csv-data/presta_Med.csv' WITH (FORMAT csv, HEADER true, delimiter ';');
+COPY presta FROM '/csv-data/presta.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
 
-COPY ingenieria.referencia FROM '/csv-data/referencia_Med.csv' WITH (FORMAT csv, HEADER true, delimiter ';');
+COPY referencia FROM '/csv-data/referencia.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
+
+
+
+
 
 
 -- Verificar carga de usuarios
@@ -41,28 +46,28 @@ DECLARE
     presta INTEGER;
     referencia INTEGER;
 BEGIN
-    SELECT COUNT(*) INTO carreras FROM ingenieria.carreras;
+    SELECT COUNT(*) INTO carreras FROM carreras;
     RAISE NOTICE 'carreras cargadas: %', carreras;
-    SELECT COUNT(*) INTO estudiantes FROM ingenieria.estudiantes;
+    SELECT COUNT(*) INTO estudiantes FROM estudiantes;
     RAISE NOTICE 'estudiantes cargados: %', estudiantes;
-    SELECT COUNT(*) INTO asignaturas FROM ingenieria.asignaturas;
+    SELECT COUNT(*) INTO asignaturas FROM asignaturas;
     RAISE NOTICE 'asignaturas cargadas: %', asignaturas;
-    SELECT COUNT(*) INTO autores FROM ingenieria.autores;
+    SELECT COUNT(*) INTO autores FROM autores;
     RAISE NOTICE 'autores cargados: %', autores;
-    SELECT COUNT(*) INTO libros FROM ingenieria.libros;
+    SELECT COUNT(*) INTO libros FROM libros;
     RAISE NOTICE 'libros cargados: %', libros;
-    SELECT COUNT(*) INTO ejemplares FROM ingenieria.ejemplares;
+    SELECT COUNT(*) INTO ejemplares FROM ejemplares;
     RAISE NOTICE 'ejemplares cargados: %', ejemplares;
-    SELECT COUNT(*) INTO escribe FROM ingenieria.escribe;
+    SELECT COUNT(*) INTO escribe FROM escribe;
     RAISE NOTICE 'escribe cargados: %', escribe;
-    SELECT COUNT(*) INTO profesores FROM ingenieria.profesores;
+    SELECT COUNT(*) INTO profesores FROM profesores;
     RAISE NOTICE 'profesores cargados: %', profesores;
-    SELECT COUNT(*) INTO imparte FROM ingenieria.imparte;
+    SELECT COUNT(*) INTO imparte FROM imparte;
     RAISE NOTICE 'imparte cargados: %', imparte;
-    SELECT COUNT(*) INTO inscribe FROM ingenieria.inscribe;
+    SELECT COUNT(*) INTO inscribe FROM inscribe;
     RAISE NOTICE 'inscribe cargados: %', inscribe;
-    SELECT COUNT(*) INTO presta FROM ingenieria.presta;
+    SELECT COUNT(*) INTO presta FROM presta;
     RAISE NOTICE 'presta cargados: %', presta;
-    SELECT COUNT(*) INTO referencia FROM ingenieria.referencia;
+    SELECT COUNT(*) INTO referencia FROM referencia;
     RAISE NOTICE 'referencia cargados: %', referencia;
 END $$;

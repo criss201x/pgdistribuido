@@ -1,29 +1,5 @@
-
-
---COPY carreras FROM '/csv-data/carreras_csv' WITH (FORMAT csv, HEADER true, delimiter ';');
-
---COPY estudiantes FROM '/csv-data/estudiantes_csv' WITH (FORMAT csv, HEADER true, delimiter ';');
-
---COPY asignaturas FROM '/csv-data/asignaturas.csv' WITH (FORMAT csv, HEADER true, delimiter ';');x
-
---COPY autores FROM '/csv-data/autores_csv' WITH (FORMAT csv, HEADER true, delimiter ';');
-
---COPY libros FROM '/csv-data/libros_csv' WITH (FORMAT csv, HEADER true, delimiter ';');
-
---COPY ejemplares FROM '/csv-data/ejemplares_csv' WITH (FORMAT csv, HEADER true, delimiter ';');
-
---COPY escribe FROM '/csv-data/escribe_csv' WITH (FORMAT csv, HEADER true, delimiter ';');
-
---COPY profesores FROM '/csv-data/profesores.csv' WITH (FORMAT csv, HEADER true, delimiter ';');
-
---COPY imparte FROM '/csv-data/imparte.csv' WITH (FORMAT csv, HEADER true, delimiter ';');
-
---COPY inscribe FROM '/csv-data/inscribe.csv' WITH (FORMAT csv, HEADER true, delimiter ';');
-
---COPY presta FROM '/csv-data/presta_csv' WITH (FORMAT csv, HEADER true, delimiter ';');
-
---COPY referencia FROM '/csv-data/referencia_csv' WITH (FORMAT csv, HEADER true, delimiter ';');
-COPY carreras FROM '/csv-data/carreras.csv' WITH (FORMAT csv, HEADER true, delimiter ';');
+--COPY carreras FROM '/csv-data/carreras.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
+COPY carreras FROM '/csv-data/carreras.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
 
 COPY estudiantes FROM '/csv-data/estudiantes.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
 
@@ -46,6 +22,11 @@ COPY inscribe FROM '/csv-data/inscribe.csv' WITH (FORMAT csv, HEADER true, delim
 COPY presta FROM '/csv-data/presta.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
 
 COPY referencia FROM '/csv-data/referencia.csv' WITH (FORMAT csv, HEADER true, delimiter ',');
+
+
+
+
+
 
 -- Verificar carga de usuarios
 DO $$
